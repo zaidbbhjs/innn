@@ -20,73 +20,140 @@ import uuid,secrets
 cok = token_hex(8) * 2
 uuid = str(uuid.uuid4())
 app = FastAPI()
+from requests import post
+import random,threading,time
+from user_agent import generate_user_agent
 
    
-@app.get('/api/hotmail/{gmail}')
-async def ga(gmail):
-    global cok,uuid
-    req=requests.post('https://signup.live.com',headers={'user-agent': 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36',});amsc=req.cookies.get_dict()['amsc'];encoded=req.text.split('Canary')[4].split('","ip":"')[0].split('":"')[1];canary = encoded.encode().decode('unicode-escape')
-    cookies = {
-                            'mkt': 'ar-YE',
-                            f'MicrosoftApplicationsTelemetryDeviceId': '{Lol}',
-                            'MUID': f'{cok}',
-                            'mkt1': 'ar-AR',
-                            'ai_session': 'CyuLoU6vSi7HJzZeYNyVoH|1709731817506|1709731817506',
-                            'amsc': f'{amsc}',
-                            'clrc': '{%2219789%22%3a[%22+VC+x0R6%22%2c%22FutSZdvn%22%2c%22d7PFy/1V%22]}',
-                        }
-    headers = {
-                            'authority': 'signup.live.com',
-                            'accept': 'application/json',
-                            'accept-language': 'ar-YE,ar;q=0.9,en-YE;q=0.8,en-US;q=0.7,en;q=0.6',
-                            'canary': f'{canary}',
-                            'content-type': 'application/json',
-                            'hpgid': '200639',
-                            'origin': 'https://signup.live.com',
-                            'referer': 'https://signup.live.com/signup?mkt=AR-AR&lic=1&uaid=ad311362ab454b14bb81937965f86b8d',
-                            'scid': '100118',
-                            'sec-ch-ua': '"Not)A;Brand";v="24", "Chromium";v="116"',
-                            'sec-ch-ua-mobile': '?1',
-                            'sec-ch-ua-platform': '"Android"',
-                            'sec-fetch-dest': 'empty',
-                            'sec-fetch-mode': 'cors',
-                            'sec-fetch-site': 'same-origin',
-                            'tcxt': 'VWlP20OW8k/xH6tFupQw1HwrEFETf+tDxcIS0OeqhsBSbBIMy4srnqBeqY1i2lMA5VbPfXSuTUEhdSw9AWoPPSNJeuzfyYceefIZ/1EGoBqppRyXgczQuaM5teemKuAKiUXDaBYMj8Ng8fhejlVVuQmHCBl+PgEGlG7A/8uqXNwqIlrg9tbOqIzHkn5X1jUytMlmFxmEjdLCQnainFfCoxqgPZjkQwcE6hQFElIuxniqWRWk6lmEleIPwhGFID2kbSE5kxjiT5eoUt/S5zxP2a1Yp+shu8ITJrys5pkwMbsWO+L18h8bH4+BG3LFLJk00zd28yeJz7uTq3NRNR1uK+OiCVwGdB5JhxmvsItOIwHc83/xeN0XuTlXGgueChmPKulABKjR4v0VDkutbyPQwRVqRPRALfutQaEjOXdx9FXOCUTySJLtPpeMPIj172+PUSlBhgueKn3Iiz2mzKbR8Kv4JgBlQF5m3dVYyNpSN998fVQE3x94ruAsioYwEOBdfEViB34QpbzAuNfoNmNisCvzI9PKzc+cDKeWkcVd7OtYQSR0AR2Ibr6LE0iulNI5/zqg/BYp3Vf2zaExAmpf8Q==:2:3',
-                            'uaid': f'{uuid}',
-                            'uiflvr': '1001',
-                            'user-agent': generate_user_agent(),
-                            'x-ms-apitransport': 'xhr',
-                            'x-ms-apiversion': '2',
-                        }
-    params = {
-                            'mkt': 'AR-AR',
-                            'lic': '1',
-                            'uaid': f'{uuid}',
-                        }
-    data = {
-                                'signInName': f'{gmail}',
-                                'uaid': f'{uuid}',
-                                'includeSuggestions': True,
-                                'uiflvr': 1001,
-                                'scid': 100118,
-                                'hpgid': 200639,
-                            }
-    req = requests.post('https://signup.live.com/API/CheckAvailableSigninNames',params=params,cookies=cookies,headers=headers,json=data,).text
-    if '"isAvailable":true' in req:
-    		data2={
-    		"email":f"{gmail}",
-    		"status":"Hit",
+@app.get('/api/{email}')
+async def check(email):
+		url="https://i.instagram.com/api/v1/users/check_email/"
+		headers={'X-Pigeon-Session-Id':'f42d4ab9-5a5e-4be0-b06c-fd5cb5a17527',
+'X-Pigeon-Rawclienttime':'1711282869.187',
+'X-IG-Connection-Speed':'-1kbps',
+'X-IG-Bandwidth-Speed-KBPS':'-1.000',
+'X-IG-Bandwidth-TotalBytes-B':'0',
+'X-IG-Bandwidth-TotalTime-MS':'0',
+'X-Bloks-Version-Id':'009f03b18280bb343b0862d663f31ac80c5fb30dfae9e273e43c63f13a9f31c0',
+'X-IG-Connection-Type':'WIFI',
+'X-IG-Capabilities':'3brTvw==',
+'X-IG-App-ID':'567067343352427',
+'User-Agent':'Instagram 100.0.0.17.129 Android (31/12; 320dpi; 720x1444; TECNO; TECNO BF6; TECNO-BF6; BF6; ar_BH; 161478664)',
+'Accept-Language':'ar-BH, en-US',
+'Cookie':'mid=ZgAaUwABAAFbkj4DEwxlXgTq3aqW; csrftoken=oxRENlfRHtGGyWXLD9tyr7J0Dd4mVaMO',
+'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
+'Accept-Encoding':'gzip, deflate',
+'Host':'i.instagram.com',
+'X-FB-HTTP-Engine':'Liger',
+'Connection':'keep-alive',
+'Content-Length':'427',};da={
+ 'signed_body':'ef02f559b04e8d7cbe15fb8cf18e2b48fb686dafd056b7c9298c08f3e2007d43.{"_csrftoken":"dG4dEIkWvAWpIj1B2M2mutWtdO1LiPCK","adid":"5e7df201-a1ff-45ec-8107-31b10944e25c","guid":"b0382b46-1663-43a7-ba90-3949c43fd808","device_id":"android-71a5d65f74b8fcbc","email":"'f'{email}''"}',
+ 
+ 'ig_sig_key_version':'4',
+ }
+		s=post(url,headers=headers,data=da).text
+		if "email_is_taken" in s:
+			dta={
+    		"email":f"{email}",
+    		"status":"Good",
     		"Dev":"Marko_Bots",
     		}
-    		return JSONResponse(content=data2)
-    	
+			return JSONResponse(content=dta)	
+		elif "يرجى الانتظار لبضع دقائق قبل إعادة المحاولة." in s:
+			url='https://i.instagram.com/api/v1/accounts/send_recovery_flow_email/'
+			h={
+ 'X-Pigeon-Session-Id':'2b712457-ffad-4dba-9241-29ea2f472ac5',
+ 'X-Pigeon-Rawclienttime':'1707104597.347',
+ 'X-IG-Connection-Speed':'-1kbps',
+ 'X-IG-Bandwidth-Speed-KBPS':'-1.000',
+ 'X-IG-Bandwidth-TotalBytes-B':'0',
+ 'X-IG-Bandwidth-TotalTime-MS':'0',
+ 'X-IG-VP9-Capable':'false',
+ 'X-Bloks-Version-Id':'009f03b18280bb343b0862d663f31ac80c5fb30dfae9e273e43c63f13a9f31c0',
+ 'X-IG-Connection-Type':'WIFI',
+ 'X-IG-Capabilities':'3brTvw==',
+ 'X-IG-App-ID':'567067343352427',
+ 'User-Agent':'Instagram 100.0.0.17.129 Android (30/11; 320dpi; 720x1448; realme; RMX3231; RMX3231; RMX3231; ar_IQ; 161478664)',
+ 'Accept-Language':'ar-IQ, en-US',
+ 'Cookie':'mid=Zbu4xQABAAE0k2Ok6rVxXpTD8PFQ; csrftoken=dG4dEIkWvAWpIj1B2M2mutWtdO1LiPCK',
+ 'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8',
+ 'Accept-Encoding':'gzip, deflate',
+ 'Host':'i.instagram.com',
+ 'X-FB-HTTP-Engine':'Liger',
+ 'Connection':'keep-alive',
+ 'Content-Length':'364',
+ }
+			da={
+ 'signed_body':'ef02f559b04e8d7cbe15fb8cf18e2b48fb686dafd056b7c9298c08f3e2007d43.{"_csrftoken":"dG4dEIkWvAWpIj1B2M2mutWtdO1LiPCK","adid":"5e7df201-a1ff-45ec-8107-31b10944e25c","guid":"b0382b46-1663-43a7-ba90-3949c43fd808","device_id":"android-71a5d65f74b8fcbc","query":"'f'{email}''"}',
+ 
+ 'ig_sig_key_version':'4',
+ }
+			s=post(url,headers=h,data=da).text
+			if '"تم إرسال البريد الإلكتروني"' in s:
+				dta={
+    		"email":f"{email}",
+    		"status":"Good",
+    		"Dev":"Marko_Bots",
+    		}
+				return JSONResponse(content=dta)
+			elif "لم يتم العثور على المستخدم" in s:
+				dta={
+    		"email":f"{email}",
+    		"status":"Bad",
+    		"Dev":"Marko_Bots",
+    		}
+				return JSONResponse(content=dta)
+			else:
+				url = 'https://www.instagram.com/api/v1/web/accounts/login/ajax/';headers = {
+            'accept':'*/*',
+            'accept-encoding':'gzip, deflate',
+            'accept-language':'en-US,en;q=0.8',
+            'content-length':'303',
+            'content-type':'application/x-www-form-urlencoded',
+            'cookie':'mid=ZQZC9QAEAAG9NicS3jBHkYqHlp8C; ig_nrcb=1; ig_did=AC6A65E6-8577-4CDE-8F3F-4B24D5787A91; datr=D0MGZZ_cUrCctc7jPE92HUgb; csrftoken=NYaOlpVmXUwzESZVfuFOYqbJ0gHzcvks',
+            'dpr':'1',
+            'origin':'https://www.instagram.com',
+            'referer':'https://www.instagram.com/',
+            'user-agent':str(generate_user_agent()),
+            'viewport-width':'808',
+            'x-asbd-id':'129477',
+            'x-csrftoken':'NYaOlpVmXUwzESZVfuFOYqbJ0gHzcvks',
+            'x-ig-app-id':'936619743392459',
+            'x-ig-www-claim':'0',
+            'x-instagram-ajax':'1008686036',
+            'x-requested-with':'XMLHttpRequest',
+            }
 
-    else:
-    		
-    		dta={
-    		"email":f"{gmail}",
-    		"status":"Taken",
+				tim = str(time.time()).split('.')[0]
+
+				data = {
+            'enc_password':f'#PWD_INSTAGRAM_BROWSER:0:{tim}:tgffghgfh',
+            'optIntoOneTap':'false',
+            'queryParams':'{}',
+            'trustedDeviceRecords':'{}',
+            'username':email,
+            }
+
+				re = requests.post(url,headers=headers,data=data).text
+				if ('"user":true') in re:
+					dta={
+    		"email":f"{email}",
+    		"status":"Good",
     		"Dev":"Marko_Bots",
     		}
-    		return JSONResponse(content=dta)
+					return JSONResponse(content=dta)
+				else:
+					dta={
+    		"email":f"{email}",
+    		"status":"Bad",
+    		"Dev":"Marko_Bots",
+    		}
+					return JSONResponse(content=dta)
+		else:
+			dta={
+    		"email":f"{email}",
+    		"status":"Bad",
+    		"Dev":"Marko_Bots",
+    		}
+			return JSONResponse(content=dta)
 #uvicorn.run(app,host='0.0.0.0',port=8080)
